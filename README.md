@@ -1,4 +1,7 @@
 # DailyPuzzles
+
+---
+
 Twitter bot for posting daily chess puzzles.
 Simple project for learning simple database, Twitter api, text parsing and cron jobs. 
 
