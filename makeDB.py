@@ -16,18 +16,17 @@ def reFormating(line):
 def makeList(f):
     conn = sqlite3.connect('mateIn4.db')
     c = conn.cursor()
-    c.execute("CREATE TABLE puzzle (id INTEGER PRIMARY KEY,fen text, to_move text)")
+    c.execute("CREATE TABLE puzzle (id INTEGER PRIMARY KEY,fen text, to_move text,solution text)")
     l = []
-    i = 1
-    for line in f:
-        if (i-2)%5 == 0:
-            fen,color = reFormating(line)
-            tup = (fen, color, lastLine)
+    lines = f.read().splitlines()
+    for i in range(2,len(lines)-1):
+        if (i-1)%5 == 0:
+            solution = lines[i+1]
+            fen,color = reFormating(lines[i])
+            tup = (fen,color,solution)
             l.append(tup)
-            dbReq = f"INSERT INTO puzzle (fen,to_move) VALUES ('{fen}','{color}')"
+            dbReq = f"INSERT INTO puzzle (fen,to_move,solution) VALUES ('{fen}','{color}','{solution}')"
             c.execute(dbReq)
-        lastLine = line.rstrip() # Players 
-        i+=1
     conn.commit()
     conn.close()
     return l
