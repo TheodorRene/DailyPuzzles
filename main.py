@@ -33,9 +33,9 @@ def tweet(player):
     image = '/home/theodorc/dev/DailyPuzzles/position.png'
 
     if player == 'w':
-        message = "White to play and mate in four."
+        message = "White to play and mate in four. #Chess #Puzzle"
     else:
-        message = "Black to play and mate in four."
+        message = "Black to play and mate in four. #Chess #Puzzle"
 
     api = tweepy.API(auth)
     myID = api.me().id
