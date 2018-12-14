@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/home/theodorc/dev/Python-3.6.5/python
 
 import sqlite3
 from sys import argv
@@ -15,7 +15,7 @@ def main():
         f.close()
 
 #Add more puzzles to database. Remeber formatting from matein4.txt
-def add(file)
+def add(file):
     f = open(file,'r')
     conn = sqlite3.connect('mateIn4.db')
     c = conn.cursor()
