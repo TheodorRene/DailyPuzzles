@@ -8,11 +8,15 @@ from sys import argv
 
 def main():
     if argv[1]=="-a":
+        print("Adding " + argv[2] + " to the puzzle database") 
         add(argv[2])
+        print("Database has been updated")
     else:
+        print("Making database from MateIn4.txt")
         f = open('MateIn4.txt','r')
         makeList(f)
         f.close()
+        print("MateIn4.db has been made)
 
 #Add more puzzles to database. Remeber formatting from matein4.txt
 def add(file):

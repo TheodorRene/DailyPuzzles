@@ -17,13 +17,16 @@ def converting(fen):
 
 def main():
     #Get fen and color to move
+    print("Querying the database")
     fen,player = query()
     #get image of position
     converting(fen)
     #wait until image is retrieved
+    print("Waiting until FEN-image is retrieved")
     sleep(2)
     #Tweet 
     tweet(player)
+    print("All done! Your tweet has been posted")
 
 def tweet(player):
     #Get keys from text file
@@ -47,7 +50,11 @@ def tweet(player):
 
     last_tweet = api.user_timeline(id=myID, count = 1)[0]
 
-    sleep(500)
+    print("Waiting 500 seconds until posting answer")
+    sleep(250)
+    print("....")
+    sleep(250)
+    print("Posting solution")
     api.update_status("@ChessDaily Solution:"+ ANSWER, in_reply_to_status_id=last_tweet.id)
 
 #get keys and parsing
@@ -59,7 +66,11 @@ def getKeys():
     return l[0],l[1],l[2],l[3]
 
 def query():
-    conn = sqlite3.connect('/home/theodorc/dev/DailyPuzzles/mateIn4.db')
+    try:
+        conn = sqlite3.connect('/home/theodorc/dev/DailyPuzzles/mateIn4.db')
+    except sqlite3.Error as er:
+        raise Exception("Could not find database file')
+
     c = conn.cursor()
     global ANSWER
 
