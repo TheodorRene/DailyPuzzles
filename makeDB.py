@@ -8,29 +8,29 @@ from os import path
 
 
 def main():
-    if len(argv)>1 and argv[1]=="-a":
+    if len(argv) > 1 and argv[1] == "-a":
         print("Adding " + argv[2] + " to the puzzle database")
         add(argv[2])
         print("Database has been updated")
     else:
-        if(path.exists("mateIn4.db")):
+        if path.exists("mateIn4.db"):
             raise Exception('Database file already exists')
         print("Making database from MateIn4.txt")
-        f = open('MateIn4.txt','r')
+        f = open('MateIn4.txt', 'r')
         makeList(f)
         f.close()
         print("MateIn4.db has been made")
 
 #Add more puzzles to database. Remember formatting from matein4.txt
 def add(file):
-    f = open(file,'r')
+    f = open(file, 'r')
     conn = sqlite3.connect('mateIn4.db')
     c = conn.cursor()
     lines = f.read().splitlines()
-    for i in range(2,len(lines)-1):
-        if (i-1)%5 == 0:
-            solution = lines[i+1]
-            fen,color = reFormating(lines[i])
+    for i in range(2, len(lines) - 1):
+        if (i - 1) % 5 == 0:
+            solution = lines[i + 1]
+            fen, color = reFormating(lines[i])
             dbReq = f"INSERT INTO puzzle (fen,to_move,solution) VALUES ('{fen}','{color}','{solution}')"
             c.execute(dbReq)
     conn.commit()
@@ -38,7 +38,7 @@ def add(file):
 
 def reFormating(line):
     l = line.split(" ")
-    return l[0],l[1]
+    return l[0], l[1]
 
 #Parses the txtfile and adds entries to the database
 def makeList(f):
@@ -47,10 +47,10 @@ def makeList(f):
     #Make table
     c.execute("CREATE TABLE puzzle (id INTEGER PRIMARY KEY,fen text, to_move text,solution text)")
     lines = f.read().splitlines()
-    for i in range(2,len(lines)-1):
+    for i in range(2, len(lines) - 1):
         #the fen comes at lines where i-1%5 is equal to zero
-        if (i-1)%5 == 0:
-            solution = lines[i+1]
+        if (i - 1) % 5 == 0:
+            solution = lines[i + 1]
             fen,color = reFormating(lines[i])
             dbReq = f"INSERT INTO puzzle (fen,to_move,solution) VALUES ('{fen}','{color}','{solution}')"
             c.execute(dbReq)
