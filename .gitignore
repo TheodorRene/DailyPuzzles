@@ -2,3 +2,4 @@ mateIn4.db
 position.png
 config.py
 venv
+__pycache__
