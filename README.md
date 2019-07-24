@@ -24,5 +24,5 @@ Simple project for learning simple database, Twitter api, text parsing and cron 
 ## FAQ
 
 * I lost track of the current puzzle 
-  * SELECT id FROM puzzle WHERE solution LIKE "%<<solution of last puzzle>>"
+  * SELECT id FROM puzzle WHERE solution LIKE "%{solution of last puzzle}%"
 
