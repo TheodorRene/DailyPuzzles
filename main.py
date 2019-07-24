@@ -5,6 +5,7 @@ import tweepy
 import sqlite3
 from sys import argv
 import subprocess
+import .config
 
 #Global variable for the solution of todays puzzle
 ANSWER = ""
@@ -59,11 +60,10 @@ def tweet(player):
 
 #get keys and parsing
 def getKeys():
-    f = open('/home/theodorc/dev/DailyPuzzles/keys.txt','r')
-    l = []
-    for line in f:
-        l.append(line.rstrip())
-    return l[0],l[1],l[2],l[3]
+    keys = [config.consumer_key, config.consumer_key_secret, config.access_token, config.access_token_secret]
+    if('' in keys):
+        raise Exception("You have not updated the config file. Please read the README before continuing")
+    return keys[0], keys[1], keys[2], keys[3]
 
 def query():
     try:
