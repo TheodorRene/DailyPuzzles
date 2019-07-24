@@ -1,11 +1,10 @@
-#!/home/theodorc/dev/Python-3.6.5/python
-
 from time import sleep
-import tweepy
 import sqlite3
 from sys import argv
+from os import path
 import subprocess
-import .config
+import tweepy
+import config
 
 #Global variable for the solution of todays puzzle
 ANSWER = ""
@@ -14,12 +13,12 @@ ANSWER = ""
 #This command downloads the image from then fen into the picture "position.png"
 def converting(fen):
     cmd = 'curl http://www.fen-to-image.com/image/36/single/coords/' + fen + ' | cat > /home/theodorc/dev/DailyPuzzles/position.png'
-    subprocess.Popen(cmd,shell=True)
+    subprocess.Popen(cmd, shell=True)
 
 def main():
     #Get fen and color to move
     print("Querying the database")
-    fen,player = query()
+    fen, player = query()
     #get image of position
     converting(fen)
     #wait until image is retrieved
@@ -31,10 +30,10 @@ def main():
 
 def tweet(player):
     #Get keys from text file
-    c_k,c_s,a_k,a_s = getKeys()
+    c_k, c_s, a_k, a_s = getKeys()
     auth = tweepy.OAuthHandler(c_k, c_s)
     auth.set_access_token(a_k, a_s)
-    image = '/home/theodorc/dev/DailyPuzzles/position.png'
+    image = 'position.png'
 
     if player == 'w':
         message = "White to play and mate in four. #Chess #Puzzle"
@@ -44,12 +43,12 @@ def tweet(player):
     api = tweepy.API(auth)
     myID = api.me().id
 
-    api.update_with_media(image,status=message)
+    api.update_with_media(image, status=message)
 
     #Wait until last tweet has gone through before postin reply
     sleep(5)
 
-    last_tweet = api.user_timeline(id=myID, count = 1)[0]
+    last_tweet = api.user_timeline(id=myID, count=1)[0]
 
     print("Waiting 500 seconds until posting answer")
     sleep(250)
@@ -61,15 +60,14 @@ def tweet(player):
 #get keys and parsing
 def getKeys():
     keys = [config.consumer_key, config.consumer_key_secret, config.access_token, config.access_token_secret]
-    if('' in keys):
+    if '' in keys:
         raise Exception("You have not updated the config file. Please read the README before continuing")
     return keys[0], keys[1], keys[2], keys[3]
 
 def query():
-    try:
-        conn = sqlite3.connect('/home/theodorc/dev/DailyPuzzles/mateIn4.db')
-    except sqlite3.Error as er:
-        raise Exception("Could not find database file')
+    if not path.exists("mateIn4.db"):
+        raise Exception('Could not find database file')
+    conn = sqlite3.connect('mateIn4.db')
 
     c = conn.cursor()
     global ANSWER
@@ -91,11 +89,6 @@ def query():
 
     conn.commit()
     conn.close()
-    return fen[0],player[0]
+    return fen[0], player[0]
 
 main()
-
-
-
-
-
