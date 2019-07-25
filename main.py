@@ -23,7 +23,6 @@ def main():
     converting(fen)
     #wait until image is retrieved
     print("Waiting until FEN-image is retrieved")
-    sleep(2)
     #Tweet 
     tweet(player)
     print("All done! Your tweet has been posted")
@@ -42,20 +41,17 @@ def tweet(player):
 
     api = tweepy.API(auth)
     myID = api.me().id
-
-    api.update_with_media(image, status=message)
-
-    #Wait until last tweet has gone through before postin reply
-    sleep(5)
-
-    last_tweet = api.user_timeline(id=myID, count=1)[0]
+    if not config.IS_DEV:
+        api.update_with_media(image, status=message)
+        last_tweet = api.user_timeline(id=myID, count=1)[0]
 
     print("Waiting 500 seconds until posting answer")
     sleep(250)
     print("....")
     sleep(250)
     print("Posting solution")
-    api.update_status("@ChessDaily Solution:"+ ANSWER, in_reply_to_status_id=last_tweet.id)
+    if not config.is_dev:
+        api.update_status("@ChessDaily Solution:"+ ANSWER, in_reply_to_status_id=last_tweet.id)
 
 #get keys and parsing
 def getKeys():
