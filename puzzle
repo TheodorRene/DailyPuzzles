@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+cd <<Path to root dir>> 
+source venv/bin/activate
+python main.py
+
