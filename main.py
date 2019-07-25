@@ -5,6 +5,7 @@ from os import path
 import subprocess
 import tweepy
 import config
+import logging
 
 #Global variable for the solution of todays puzzle
 ANSWER = ""
@@ -12,24 +13,25 @@ ANSWER = ""
 
 #This command downloads the image from then fen into the picture "position.png"
 def converting(fen):
-    cmd = 'curl http://www.fen-to-image.com/image/36/single/coords/' + fen + ' | cat > /home/theodorc/dev/DailyPuzzles/position.png'
+    logging.debug("retrieving image from fen: %s", fen)
+    cmd = 'curl http://www.fen-to-image.com/image/36/single/coords/' + fen + ' > position.png'
     subprocess.Popen(cmd, shell=True)
 
 def main():
+    logging.basicConfig(filename='daily_puzzle.log',level=logging.DEBUG)
+    logging.info("====STARTING NEW INSTANCE OF SCRIPT====")
     #Get fen and color to move
-    print("Querying the database")
     fen, player = query()
     #get image of position
     converting(fen)
-    #wait until image is retrieved
-    print("Waiting until FEN-image is retrieved")
     #Tweet 
     tweet(player)
-    print("All done! Your tweet has been posted")
+    logging.info("Tweet has been posted")
+    logging.info("====END OF SCRIPT====")
 
 def tweet(player):
-    #Get keys from text file
     c_k, c_s, a_k, a_s = getKeys()
+    logging.info("Connection to api")
     auth = tweepy.OAuthHandler(c_k, c_s)
     auth.set_access_token(a_k, a_s)
     image = 'position.png'
@@ -45,16 +47,16 @@ def tweet(player):
         api.update_with_media(image, status=message)
         last_tweet = api.user_timeline(id=myID, count=1)[0]
 
-    print("Waiting 500 seconds until posting answer")
-    sleep(250)
-    print("....")
-    sleep(250)
-    print("Posting solution")
-    if not config.is_dev:
+    logging.info("Waiting 500 seconds until posting solution if in prod")
+    if not config.IS_DEV:
+        sleep(500)
+    logging.info("Posting solution")
+    if not config.IS_DEV:
         api.update_status("@ChessDaily Solution:"+ ANSWER, in_reply_to_status_id=last_tweet.id)
 
 #get keys and parsing
 def getKeys():
+    logging.info("Retrieving keys from config file")
     keys = [config.consumer_key, config.consumer_key_secret, config.access_token, config.access_token_secret]
     if '' in keys:
         raise Exception("You have not updated the config file. Please read the README before continuing")
@@ -63,6 +65,7 @@ def getKeys():
 def query():
     if not path.exists("mateIn4.db"):
         raise Exception('Could not find database file')
+    logging.info("Connecting to database")
     conn = sqlite3.connect('mateIn4.db')
 
     c = conn.cursor()
@@ -78,11 +81,16 @@ def query():
     getFen = f"SELECT fen FROM puzzle WHERE id={num}"
     getPlayer = f"SELECT to_move FROM puzzle WHERE id={num}"
     getAnswer = f"SELECT solution FROM puzzle WHERE id={num}"
+    logging.debug("Getting answer")
     ANSWER = c.execute(getAnswer).fetchone()[0]
+    logging.info("Updating count")
+    logging.debug("Current count: %s",ANSWER) 
     c.execute(updateCount)
+    logging.info("Getting fen and player")
     fen = c.execute(getFen).fetchone()
     player = c.execute(getPlayer).fetchone()
-
+    logging.debug("fen: %s player: %s", fen, player)
+    logging.info("Closing connection")
     conn.commit()
     conn.close()
     return fen[0], player[0]
