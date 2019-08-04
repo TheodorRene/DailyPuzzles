@@ -17,7 +17,7 @@ Simple project for learning simple database, Twitter api, text parsing and cron 
 * Run makeDB.py
 * Get developer keys for your account from https://developer.twitter.com/en.html
 * Rename example_config.py to config.py and update constants
-* Make a cron tab that runs the script
+* Update cron_script with correct path and move it to /etc/cron.daily 
 * ?????
 * profit
 
