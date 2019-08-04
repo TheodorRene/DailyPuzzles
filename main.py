@@ -6,6 +6,7 @@ import subprocess
 import logging
 import tweepy
 import config
+from create_board import gen_board
 
 #Global variable for the solution of todays puzzle
 ANSWER = ""
@@ -24,7 +25,8 @@ def main():
     #Get fen and color to move
     fen, player = query()
     #get image of position
-    converting(fen)
+    #converting(fen)
+    gen_board(fen)
     sleep(5)
     #Tweet
     tweet(player)
