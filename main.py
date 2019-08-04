@@ -25,6 +25,7 @@ def main():
     fen, player = query()
     #get image of position
     converting(fen)
+    sleep(5)
     #Tweet
     tweet(player)
     logging.info("Tweet has been posted")
