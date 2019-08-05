@@ -2,7 +2,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 def gen_board(fen):
     """"Generate board"""
     chessboard = np.full((8, 8), 0.35)
@@ -10,21 +9,22 @@ def gen_board(fen):
     chessboard[0::2, 1::2] = 1
 
     arr = gen_array(fen)
+
+    cur_pos = 0
     lastnum = ""
-    hascount = 0
     for y in range(0, len(arr)):
         for x in range(0, len(arr[y])):
             if not arr[y][x].isdigit():
-                x_pos = x + hascount - 0.1
+                x_pos = x + cur_pos
                 if lastnum.isdigit():
-                    x_pos += (int(lastnum) - 1)
-                    hascount += 1
+                    cur_pos += int(lastnum)-1
+                    x_pos += int(lastnum)-1
                 char = get_char(arr[y][x])
                 color = "black" if arr[y][x].islower() else "white"
-                plt.plot(x_pos, y, marker=char, markersize=26, color=color, fillstyle='bottom')
+                plt.plot(x_pos-0.05, y, marker=char, markersize=26, color=color, fillstyle='bottom')
             lastnum = arr[y][x]
+        cur_pos = 0
         lastnum = ""
-        hascount = 0
 
     plt.xticks(np.arange(8), ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'))
     plt.yticks(np.arange(8), ('8', '7', '6', '5', '4', '3', '2', '1'))
@@ -64,3 +64,4 @@ def gen_array(fen):
             arr.append(fen[i:el_])
             i = el_ + 1
     return arr
+
