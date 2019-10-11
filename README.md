@@ -4,6 +4,7 @@
 
 Twitter bot for posting daily chess puzzles.
 Simple project for learning simple database, Twitter api, text parsing and cron jobs. 
+Post a puzzle daily and solution to the puzzle 12 hours later
 
   * Pictures generated from http://www.fen-to-image.com/
   * Puzzles from http://wtharvey.com/ Only mate in four at the moment

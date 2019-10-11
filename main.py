@@ -25,21 +25,24 @@ def main():
     #Get fen and color to move
     fen, player = query()
     #get image of position
-    #converting(fen)
-    gen_board(fen)
+    converting(fen)
+    #gen_board(fen) homemade chessboard generator
     sleep(5)
     #Tweet
     tweet(player)
     logging.info("Tweet has been posted")
     logging.info("====END OF SCRIPT====")
 
-
-def tweet(player):
-    """ it tweets """
+def log_in():
+    """ authenticates and returns the api"""
     c_k, c_s, a_k, a_s = get_keys()
     logging.info("Connection to api")
     auth = tweepy.OAuthHandler(c_k, c_s)
     auth.set_access_token(a_k, a_s)
+    return tweepy.API(auth)
+
+def tweet(player):
+    """ it tweets """
     image = 'position.png'
 
     if player == 'w':
@@ -47,7 +50,7 @@ def tweet(player):
     else:
         message = "Black to play and mate in four. #Chess #Puzzle"
 
-    api = tweepy.API(auth)
+    api = log_in()
     my_id = api.me().id
     if not config.IS_DEV:
         api.update_with_media(image, status=message)
@@ -58,7 +61,15 @@ def tweet(player):
         sleep(500)
     logging.info("Posting solution")
     if not config.IS_DEV:
-        api.update_status("@ChessDaily Solution:"+ ANSWER, in_reply_to_status_id=last_tweet.id)
+        tweet_solution(ANSWER, last_tweet.id)
+
+def tweet_solution(answer, last_tweet_id):
+    """ Tweet solution 12 hours later"""
+    api = log_in()
+    sleep(43200)
+    api.update_status("@ChessDaily Solution:"+ answer, in_reply_to_status_id=last_tweet_id)
+
+
 
 #get keys and parsing
 def get_keys():

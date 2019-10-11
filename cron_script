@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-cd <<Path to root dir>> 
+cd <<Path to DailyPuzzle>> 
 source venv/bin/activate
 python main.py
 
