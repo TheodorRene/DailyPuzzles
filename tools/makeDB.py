@@ -5,6 +5,7 @@ from sys import argv
 from os import path
 
 # \s*([rnbqkpRNBQKP1-8]+\/){7}([rnbqkpRNBQKP1-8]+)\s[bw-]\s(([a-hkqA-HKQ]{1,4})|(-))\s(([a-h][36])|(-))\s\d+\s\d+\s* possible regex for verifing FEN
+
 config = {
     "mod": 5,
     "offset": 1
@@ -24,7 +25,7 @@ def main():
     elif argv[1] == '--help':
         print("-a FILE : parse FILE and add to database" )
         print("-t FILE : parse FILE and show parsing for test purposes")
-        print("FILE : parse FILE and make database file mateIn4.db if it doesnt exist "
+        print("FILE : parse FILE and make database file mateIn4.db if it doesnt exist")
     else:
         if path.exists("mateIn4.db"):
             raise Exception('Database file already exists')
@@ -32,6 +33,7 @@ def main():
         makeList(argv[1])
         f.close()
         print("MateIn4.db has been made")
+
 
 def parse_file(file, isTestRun):
     f = open(file, 'r')
@@ -43,7 +45,7 @@ def parse_file(file, isTestRun):
             solution = lines[i+1]
             fen, color = reFormating(lines[i])
             if isTestRun:
-                if lines_printed < 10:
+                if lines_printed < 10: # Allow user to go through the parsed line 10 at a time
                     printDebugInfo(fen, color, solution)
                     lines_printed += 1
                 else:
@@ -83,7 +85,7 @@ def reFormating(line):
     l = line.split(" ")
     return l[0], l[1]
 
-#Parses the txtfile and adds entries to the database
+# Creates puzzle table, adds parsed data from text file to the database, then creates count table
 def makeList(file):
     conn = sqlite3.connect('mateIn4.db')
     c = conn.cursor()
