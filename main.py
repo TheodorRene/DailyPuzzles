@@ -56,17 +56,15 @@ def tweet(player):
         api.update_with_media(image, status=message)
         last_tweet = api.user_timeline(id=my_id, count=1)[0]
 
-    logging.info("Waiting 500 seconds until posting solution if in prod")
-    if not config.IS_DEV:
-        sleep(500)
-    logging.info("Posting solution")
+    logging.info("Wait 12 hours until posting solution if in prod")
     if not config.IS_DEV:
         tweet_solution(ANSWER, last_tweet.id)
 
 def tweet_solution(answer, last_tweet_id):
     """ Tweet solution 12 hours later"""
-    api = log_in()
     sleep(43200)
+    logging.info("Posting solution")
+    api = log_in()
     api.update_status("@ChessDaily Solution:"+ answer, in_reply_to_status_id=last_tweet_id)
 
 
