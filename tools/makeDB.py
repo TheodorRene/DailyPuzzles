@@ -11,6 +11,7 @@ config = {
     "offset": 1
 }
 
+""" Main function """
 def main():
     if len(argv) > 1 and argv[1] == "-a":
         try:
@@ -23,7 +24,7 @@ def main():
         print("testing parsing")
         parse_file(argv[2], True)
     elif argv[1] == '--help':
-        print("-a FILE : parse FILE and add to database" )
+        print("-a FILE : parse FILE and add to database")
         print("-t FILE : parse FILE and show parsing for test purposes")
         print("FILE : parse FILE and make database file mateIn4.db if it doesnt exist")
     else:
@@ -31,11 +32,11 @@ def main():
             raise Exception('Database file already exists')
         print("Making database from argument")
         makeList(argv[1])
-        f.close()
         print("MateIn4.db has been made")
 
 
 def parse_file(file, isTestRun):
+    """ Parse file as according to config parameters """
     f = open(file, 'r')
     lines = f.read().splitlines()
     parsed_data = []
@@ -46,16 +47,15 @@ def parse_file(file, isTestRun):
             fen, color = reFormating(lines[i])
             if isTestRun:
                 if lines_printed < 10: # Allow user to go through the parsed line 10 at a time
-                    printDebugInfo(fen, color, solution)
+                    print_debug_info(fen, color, solution)
                     lines_printed += 1
                 else:
                     ans = input("Do you want to see 10 more lines?[Y,n]")
-                    if ans in ['n','N', 'No']:
+                    if ans in ['n', 'N', 'No']:
                         print("Finished")
                         return
-                    else:
-                        printDebugInfo(fen, color, solution)
-                        lines_printed = 0
+                    print_debug_info(fen, color, solution)
+                    lines_printed = 0
 
             else:
                 parsed_data.append((fen, color, solution))
@@ -63,30 +63,35 @@ def parse_file(file, isTestRun):
     return parsed_data
 
 
-def printDebugInfo(fen, color, solution):
+def print_debug_info(fen, color, solution):
+    """ Print debug info """
     print("fen", fen)
     print("color", color)
     print("solution", solution)
 
 
-#Add more puzzles to database. Remember formatting from matein4.txt
 def add(file):
+    """ Add more puzzles to database. Remember formatting from matein4.txt """
     conn = sqlite3.connect('mateIn4.db')
     c = conn.cursor()
     parsed_data = parse_file(file, False)
     for data in parsed_data:
-            fen, color, solution = data
-            dbReq = f"INSERT INTO puzzle (fen,to_move,solution) VALUES ('{fen}','{color}','{solution}')"
-            c.execute(dbReq)
+        fen, color, solution = data
+        dbReq = f"INSERT INTO puzzle (fen,to_move,solution) VALUES ('{fen}','{color}','{solution}')"
+        c.execute(dbReq)
     conn.commit()
     conn.close()
 
 def reFormating(line):
+    """" split line for proper parsing """
     l = line.split(" ")
     return l[0], l[1]
 
-# Creates puzzle table, adds parsed data from text file to the database, then creates count table
 def makeList(file):
+    """
+    Creates puzzle table, adds parsed data from text file to the database, then
+    creates count table
+    """
     conn = sqlite3.connect('mateIn4.db')
     c = conn.cursor()
     #Make table

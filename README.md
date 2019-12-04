@@ -14,8 +14,8 @@ Post a puzzle daily and solution to the puzzle 12 hours later
 ## How to develop
 
 * Make sure you have a python version >3.6
-* Make a virtual enviroment and install tweepy
-* Run makeDB.py
+* Make a virtual environment and install tweepy
+* Run makeDB.py --help and follow instructions
 * Get developer keys for your account from https://developer.twitter.com/en.html
 * Rename example_config.py to config.py and update constants
 * Update cron_script with correct path and move it to /etc/cron.daily 
