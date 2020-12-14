@@ -6,7 +6,6 @@ import subprocess
 import logging
 import tweepy
 import config
-from create_board import gen_board
 
 #Global variable for the solution of todays puzzle
 ANSWER = ""
