@@ -8,7 +8,8 @@ from os import path
 
 config = {
     "mod": 5,
-    "offset": 1
+    "offset": 1,
+    "db":"mateIn3.db"
 }
 
 """ Main function """
@@ -26,13 +27,13 @@ def main():
     elif argv[1] == '--help':
         print("-a FILE : parse FILE and add to database")
         print("-t FILE : parse FILE and show parsing for test purposes")
-        print("FILE : parse FILE and make database file mateIn4.db if it doesnt exist")
+        print("FILE : parse FILE and make database file if it doesnt exist ")
     else:
-        if path.exists("mateIn4.db"):
+        if path.exists(config['db']):
             raise Exception('Database file already exists')
         print("Making database from argument")
         makeList(argv[1])
-        print("MateIn4.db has been made")
+        print("DB file has been made")
 
 
 def parse_file(file, isTestRun):
@@ -72,7 +73,7 @@ def print_debug_info(fen, color, solution):
 
 def add(file):
     """ Add more puzzles to database. Remember formatting from matein4.txt """
-    conn = sqlite3.connect('mateIn4.db')
+    conn = sqlite3.connect(config["db"])
     c = conn.cursor()
     parsed_data = parse_file(file, False)
     for data in parsed_data:
@@ -92,7 +93,7 @@ def makeList(file):
     Creates puzzle table, adds parsed data from text file to the database, then
     creates count table
     """
-    conn = sqlite3.connect('mateIn4.db')
+    conn = sqlite3.connect(config["db"])
     c = conn.cursor()
     #Make table
     c.execute("CREATE TABLE puzzle (id INTEGER PRIMARY KEY,fen text, to_move text,solution text)")
@@ -100,7 +101,7 @@ def makeList(file):
     c.close()
     add(file)
     #Reestablish connection
-    conn = sqlite3.connect('mateIn4.db')
+    conn = sqlite3.connect(config["db"])
     c = conn.cursor()
     # make counting table
     c.execute("CREATE TABLE count (id INTEGER PRIMARY KEY, number INTEGER)")

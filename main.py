@@ -46,7 +46,7 @@ def tweet(player):
     image = 'position.png'
 
     if player == 'w':
-        message = "White to play and mate in four. #Chess #Puzzle"
+        message = "White to play and mate in three. #Chess #Puzzle"
     else:
         message = "Black to play and mate in four. #Chess #Puzzle"
 
@@ -80,10 +80,10 @@ def get_keys():
 
 def query():
     """ Does all the querying against the database """
-    if not path.exists("mateIn4.db"):
+    if not path.exists("mateIn3.db"):
         raise Exception('Could not find database file')
     logging.info("Connecting to database")
-    conn = sqlite3.connect('mateIn4.db')
+    conn = sqlite3.connect('mateIn3.db')
 
     database = conn.cursor()
     global ANSWER
