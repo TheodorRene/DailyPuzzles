@@ -47,7 +47,7 @@ def tweet(player):
     if player == 'w':
         message = "White to play and mate in three. #Chess #Puzzle"
     else:
-        message = "Black to play and mate in four. #Chess #Puzzle"
+        message = "Black to play and mate in three. #Chess #Puzzle"
 
     api = log_in()
     my_id = api.me().id
