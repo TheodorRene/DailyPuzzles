@@ -52,7 +52,8 @@ def tweet(player):
     api = log_in()
     my_id = api.me().id
     if not config.IS_DEV:
-        api.update_with_media(image, status=message)
+        res = api.media_upload(image)
+        api.update_status(status=message, media_ids=[res['media_id']])
         last_tweet = api.user_timeline(id=my_id, count=1)[0]
 
     logging.info("Wait 12 hours until posting solution if in prod")
